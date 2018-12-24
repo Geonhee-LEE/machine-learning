@@ -1,7 +1,15 @@
 # Reinforcement-learning
 
 ## Materials
+### Presentation
+-[ ] [가깝고도 먼 DeepRL-이웅원](https://www.evernote.com/shard/s675/nl/180905195/34065565-4490-4aac-81af-daaaeab944de/)
 
+### Lecture
+-[ ] [모두의 강화학습](https://www.evernote.com/shard/s675/nl/180905195/164bbf2c-32bf-428d-a669-2f6ed706b87d/)
+-[ ] [CS234: Reinforcement Learning](http://web.stanford.edu/class/cs234/index.html)
+-[ ] [CS 294](https://www.evernote.com/shard/s675/nl/180905195/0c05399a-051f-4b25-bb01-88054225b1f6/)[CS 294 - 모두의 연구소](https://www.evernote.com/shard/s675/nl/180905195/cba765aa-fddc-45ac-943a-773a01ec4865/)
+-[ ] [UCL Course on RL](https://www.evernote.com/shard/s675/nl/180905195/259cc4f8-8156-4b93-a244-d78a6c95a81a/)
+-[ ] [CSE 579](https://www.evernote.com/shard/s675/nl/180905195/af4ac27e-bd90-4477-8bdd-ca3dc306007a/)
 
 
 ## Project
@@ -20,5 +28,3 @@
 
 - [RLKorea 2nd project - Inverse RL](https://github.com/reinforcement-learning-kr/lets-do-gail)
 
-### CS 294
-- 
