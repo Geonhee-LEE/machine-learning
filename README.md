@@ -18,7 +18,7 @@
 
 ### Imitation learning
 
-- [RLKorea 2nd project - Imitation learning](https://github.com/reinforcement-learning-kr/lets-do-gail)
+- [RLKorea 2nd project - Inverse RL](https://github.com/reinforcement-learning-kr/lets-do-gail)
 
 ### CS 294
 - 
