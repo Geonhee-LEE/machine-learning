@@ -3,6 +3,10 @@
 ## Materials
 ### Presentation
 - [ ] [가깝고도 먼 DeepRL-이웅원](https://www.evernote.com/shard/s675/nl/180905195/34065565-4490-4aac-81af-daaaeab944de/)
+- [ ] [RL-sutton-김태훈](https://www.evernote.com/shard/s675/nl/180905195/910f9689-9dd6-4988-ac45-7ad42a62f137/)
+- [ ] [FromReinforce2PPO-이웅원](https://www.evernote.com/shard/s675/nl/180905195/4242c608-2055-4fad-a624-52eb51388a57/)
+- [ ] [Introduction to reinforcement learning-Milica Gaˇsic](https://www.evernote.com/shard/s675/nl/180905195/ed3ed36a-9bb3-40e9-b269-422e233a329e/)
+- [ ] [An Introduction to Deep Reinforcement Learning-McGill University,Google Brain](https://www.evernote.com/shard/s675/nl/180905195/cac83930-c438-483c-bc00-172e50056db1/)
 
 ### Lecture
 - [ ] [모두의 강화학습](https://www.evernote.com/shard/s675/nl/180905195/164bbf2c-32bf-428d-a669-2f6ed706b87d/)
