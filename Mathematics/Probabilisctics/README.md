@@ -1,15 +1,5 @@
-# machine-learning
 
-## Study materials
-
-### CS231n: Convolutional Neural Networks for Visual Recognition
-- [x]  [CS231N](http://cs231n.stanford.edu/)
-- [x]  [CS231N - 정리자료(private)](https://drive.google.com/drive/folders/1aUlWP3Rc-71azD5LQQfIo41SeDuNCEzc)
-
-### CS 188: Intro to AI
-- [ ]  [CS 188](https://www.evernote.com/shard/s675/nl/180905195/80aeec3f-4806-40f1-9dd2-e6fb20104a62/)
-
-
-
-### Reinforecement learning
-- [ ]  [Reinforecement learning](https://github.com/Geonhee-LEE/machine-learning/tree/master/Reinforcement%20learning)
+### Term
+> likelihood
+>> 이미 주어진 표본 x들에 비추어 봤을 때 모집단의 모수 θ에 대한 추정이 그럴듯한 정도
+> 모수(parameter)가 미지의 θ인 확률분포에서 뽑은 표본(관측치) x들을 바탕으로 θ를 추정하는 기법
