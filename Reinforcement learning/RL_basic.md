@@ -25,6 +25,8 @@
 - Policy Gradient Method
 - Actor Critic Method
 
+
+<div style="page-break-after: always;"></div>
 -----
 
 # Introduction to Reinforcement learn
@@ -45,6 +47,8 @@
 -   agent가 step t에서 얼마나 잘 수행하는 지 나타냄.
 -   agent의 목표는 전체 reward의 합을 최대화하는 것
   
+</br>
+
 -----
 
 ### Sequential Decision Making
@@ -53,6 +57,8 @@
 -   Action들은 long term 결과들을 가질 것.
 -   Reward는 지연될 것.
 -   long-term reward를 더 크게 얻기 위해 즉각적인 reward를 희생하는 것이 나을 수도 있음.
+
+</br>
 
 -----
 
@@ -63,6 +69,7 @@
 -   공식으로는, state는 history의 함수이다.
 
 $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$     $S_t = f(H_t)$
+
 
 -----
 
@@ -122,6 +129,10 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$ $\qquad$     $O_t = S
     -   Deterministic policy: a = $\pi (s)$.
     -   Stochastic policy: $\pi (a|s)$ = $\mathbb{P} [A_t = a | S_t = s]$.
 
+<p align="center"> 
+    <img src="./img/maze_policy.png" width="320" height="240">
+</p>
+
 #### Value function
 
 -   Value function: Future reward 예측 값.
@@ -130,6 +141,9 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$ $\qquad$     $O_t = S
 
 $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$   $V_{\pi} = \mathbb{E} [R_{t+1} + \gamma R_{t+2} + \gamma ^2 R_{t+3} + ... | S_t = s]$
 
+<p align="center"> 
+    <img src="./img/maze_value_func.png" width="320" height="240">
+</p>
 
 #### Model
 
@@ -138,61 +152,134 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$   $V_{\pi} = \mathbb{
 -   $R$: 다음(즉각적인) reward를 예측.
 
 
-$\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$   $P ^a _{s s'}$ = $\mathbb{P} [S_{t+1} = s' | S_t = s, A_t = a]$
-$\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$     $R ^a _{s}$ = $\mathbb{E} [R_{t+1} | S_t = s, A_t = a]$
+$\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$   $P^a_{ss'}$ = $\mathbb{P}$ $[S_{t+1} = s' | S_t = s, A_t = a]$
+
+$\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$     $R^a_{s}$ = $\mathbb{E}$ $[R_{t+1} | S_t = s, A_t = a]$
 
 
 <p align="center"> 
-<img src="./img/maze_policy.png" width="240" height="240">
-<img src="./img/maze_value_func.png" width="240" height="240">
-<img src="./img/maze_model.png" width="320" height="240">
+    <img src="./img/maze_model.png" width="320" height="240">
 </p>
 
+-   Agent는 env의 내부 모델을 가지고 있다고 가정.
+    -   Dynamics: action들이 state를 변화시키는 방법.
+    -   Rewards: 각 state으로부터 얼마의 reward를 받는 지.
+    -   Model은 불완전할 것.
+
+-   Grid layout은 transition model ($P_{ss'} ^a$)를 나타낸다.
+-   숫자들은 (모든 행동에 동일한) 각 state s로부터 즉각적인 reward ($R ^a _s$)를 나타낸다.   
+
+-----
+
+### RL Agent 분류
+
+<p align="center"> 
+    <img src="./img/agent_taxonomy.png" width="360" height="250">
+</p>
+
+#### Learnign and Planning
+
+Sequential decision making에서 두 가지 근본적인 문제
+- Reinforcement Learning:
+  - Env는 초기에 알려져있지 않음.
+  - Agent는 Env와 상호작용.
+  - Agent는 policy를 향상시킴.
+
+-   Planning:
+    -   Env 모델은 알려져 있음.
+    -   Agent는 (어떠한 외부 상호작용 없이) 모델과 계산을 수행.
+    -   Agent는 policy를 향상시킴.
+    -   a.k.a. deliberation, reasoning, introspection, pondering, thought, search.
+
+----
+
+#### Exploration and Exploitation
+
+-   RL은 trial-and-error learning과 유사.
+-   Agent는 good policy를 발견해야만 한다.
+    -   Env의 경험으로부터 
+    -   도중에 많은 reward를 잃지 않도록
+
+-   **Exploration**은 Env에 대한 더 많은 정보를 찾는다.
+-   **Exploitation**은 reward를 최대화하기 위해 알려진 정보를 exploit.
+-   Exploit만큼 explore도 일반적으로 중요하다.
+
+----
+
+#### Prediction and Control
+
+-   **Prediction**: future를 평가.
+    -   주어진 policy를 이용하여 계산 및 평가.
+        -   (아래그림)Uniform random policy의 value function은 무엇인가?
+
+
+<p align="center"> 
+    <img src="./img/predict.png" width="380" height="160">
+</p>
+
+
+
+-   **Control**: future를 최적화.
+    -   best policy를 찾는 것.
+        -   (아래그림)모든 가능한 정책들에서 optimal value function은 무엇인가?
+        -   (아래그림)Optimal policy는 무엇인가?
+
+<p align="center"> 
+    <img src="./img/control.png" width="380" height="160">
+</p>
+
+
+
+<div style="page-break-after: always;"></div>
 -----
 
 
 # Markov Decision Process(MDP)
 
+
+<div style="page-break-after: always;"></div>
 -----
 
 
 # Dynamic Programming(DP)
 
+<div style="page-break-after: always;"></div>
 -----
 
 
 # Monte Carlo Method(MC)
 
+<div style="page-break-after: always;"></div>
 -----
 
 
 # Temporal Difference Method(TD)
 
+<div style="page-break-after: always;"></div>
 -----
 
 
 # Planning and Learning with Tabular Methods
 
+<div style="page-break-after: always;"></div>
 -----
 
 
 # On-policy Control with with Approximation
 
+<div style="page-break-after: always;"></div>
 -----
 
 
 # Policy Gradient Method
 
+<div style="page-break-after: always;"></div>
 -----
 
 
 # Actor Critic Method
 
   
-<p align="center"> 
-    MP(X, P)
-</p>
-
 
 
 
