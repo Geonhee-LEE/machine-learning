@@ -27,6 +27,7 @@
 
 
 <div style="page-break-after: always;"></div>
+
 -----
 
 # Introduction to Reinforcement learn
@@ -75,6 +76,7 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$     $S_t = f(H_t)$
 
 ### Information State
 -   Information state(a.k.a. Markov state)는 history로부터 모든 유용한 정보를 포함한다.
+-   정보이론 관점에서의 information state 혹은 Markov state라는 상태가 있다. 데어터 관점에서 history의 유용한 정보들을 포함하고 있는 state를 의미한다.
 
 > Definition
 > > state $S_t$는 Markov 이다 if and only if
@@ -100,31 +102,40 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$ $\qquad$     $O_t = S
 -   Agent state = environment state = information state.
 -   형식적으로, 이것은 Markov decision precess(MDP).
 
+</br>
+
 -----
 
 ### Partially Observable Environments
 
 -   Partial observability: agent는 간접적으로 environment를 관찰.
-    -   robot이 카메라를 가지고 절대적인 위치를 알지못하는 것.
-    -   포커를 하는 agent는 오직 오픈한 card들만 볼 수 있는 것.
--  여기서 agent state $\neq$ environment state.
+    -   (ex)robot이 카메라를 가지고 절대적인 위치를 알지못하는 것.
+    -   (ex)포커를 하는 agent는 오직 오픈한 card들만 볼 수 있는 것.
+-  여기서는, agent state $\neq$ environment state.
 -  형식적으로, 이것을 partially observable Markob decision process(POMDP).
 -  Agent는 자체 state representation $S ^a _t$을 구성해야만 한다.
-   -  Complete history: $S ^a _t = H _t$.
-   -  **Beliefs** of environment state: $S ^a _t$ = $\mathbb{P}$ $[S ^e _t = s ^1] , ... , \mathbb{P}[S ^e _t = s ^n])$.
-   -  Recurrent neural network: $S ^a _t = \sigma (S ^a _{t-1} W_s + O_t W_o )$.
+   -  다음과 같은 방법으로 만들 수 있다(1. 전체 history 사용, 2. 확률을 사용, 3. RNN 방식 사용).
+      -  Complete history: $S ^a _t = H _t$.
+      -  **Beliefs** of environment state: $S ^a _t$ = $\mathbb{P}$ $[S ^e _t = s ^1] , ... , \mathbb{P}[S ^e _t = s ^n])$.
+      -  Recurrent neural network: $S ^a _t = \sigma (S ^a _{t-1} W_s + O_t W_o )$.
+
+</br>
+
+
+<div style="page-break-after: always;"></div>
 
 -----
 
 ### RL Agent의 주요 성분
 
--   Policy: agent의 행동 함수.
--   Value function: 각 state 및/혹은 action이 얼마나 좋은지.
--   Model: agent's representation of the environment.
+-   **Policy**: agent의 행동 함수.
+-   **Value function**: 각 state 및/혹은 action이 얼마나 좋은지.
+-   **Model**: agent's representation of the environment.
+
 
 #### Policy
 
--   Policy: Agent의 행동.
+-   **Policy**: Agent의 행동.
 -   State에서 action으로 매핑.
     -   Deterministic policy: a = $\pi (s)$.
     -   Stochastic policy: $\pi (a|s)$ = $\mathbb{P} [A_t = a | S_t = s]$.
@@ -135,7 +146,7 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$ $\qquad$     $O_t = S
 
 #### Value function
 
--   Value function: Future reward 예측 값.
+-   **Value function**n: Future reward 예측 값.
 -   State의 좋은것/나쁜것인지 판단하기 위해 사용.
 -   Value function을 이용하여 action 선택
 
@@ -145,9 +156,11 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$   $V_{\pi} = \mathbb{
     <img src="./img/maze_value_func.png" width="320" height="240">
 </p>
 
+</br>
+
 #### Model
 
--   Model: environment에서 다음에 행해질게 무엇인지 예측.
+-   **Model**: environment에서 다음에 행해질게 무엇인지 예측.
 -   $P$: 다음 state를 예측.
 -   $R$: 다음(즉각적인) reward를 예측.
 
@@ -158,7 +171,7 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$     $R^a_{s}$ = $\mat
 
 
 <p align="center"> 
-    <img src="./img/maze_model.png" width="320" height="240">
+    <img src="./img/maze_model.png" width="240" height="180">
 </p>
 
 -   Agent는 env의 내부 모델을 가지고 있다고 가정.
@@ -169,12 +182,15 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$     $R^a_{s}$ = $\mat
 -   Grid layout은 transition model ($P_{ss'} ^a$)를 나타낸다.
 -   숫자들은 (모든 행동에 동일한) 각 state s로부터 즉각적인 reward ($R ^a _s$)를 나타낸다.   
 
+
+<div style="page-break-after: always;"></div>
+
 -----
 
 ### RL Agent 분류
 
 <p align="center"> 
-    <img src="./img/agent_taxonomy.png" width="360" height="250">
+    <img src="./img/agent_taxonomy.png" width="320" height="250">
 </p>
 
 #### Learnign and Planning
@@ -231,49 +247,212 @@ Sequential decision making에서 두 가지 근본적인 문제
 
 
 <div style="page-break-after: always;"></div>
+
 -----
 
 
 # Markov Decision Process(MDP)
 
+## Outline
+
+-   Markov Processes
+-   Markob Reward Processes
+-   Markov Decision Processes
+-   Extensions to MDPs
+ 
 
 <div style="page-break-after: always;"></div>
+
+## Introduction to MDPs
+
+-   Markov decision processes(MDP)는 RL에서 Env를 형식적으로 기술.
+    -   여기서 Env는 fully observable.
+    -   i.e., 현재 state는 완전하게 process의 특성을 나타냄.
+
+
+-  대부분 모든 RL 문제들은 MDPs 로 공식화될 수 있다.
+   -  Optimal control은 주로 continous MDPs를 다룬다.
+   -  Partially Observable problem은 MDPs로 변환을 할 수 있다.
+   -  Bandits은 하나의 state를 가진 MDPs이다.
+
+
+</br>
+
+
+----
+
+## Markov Property
+
+"미래는 현재에서의 과거와 독립적이다."
+
+> Definition
+> > state $S_t$는 _Markov_ if and only if
+> > $\mathbb{P} [S_{t+1} | S_t]$ = $\mathbb{P} [S_{t+1} | S_1,]$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="page-break-after: always;"></div>
+
+
+
+
 -----
 
 
 # Dynamic Programming(DP)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div style="page-break-after: always;"></div>
+
 -----
 
 
 # Monte Carlo Method(MC)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div style="page-break-after: always;"></div>
+
 -----
 
 
 # Temporal Difference Method(TD)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div style="page-break-after: always;"></div>
+
 -----
 
 
 # Planning and Learning with Tabular Methods
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div style="page-break-after: always;"></div>
+
 -----
 
 
 # On-policy Control with with Approximation
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div style="page-break-after: always;"></div>
+
 -----
 
 
 # Policy Gradient Method
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div style="page-break-after: always;"></div>
+
 -----
 
 
@@ -283,7 +462,29 @@ Sequential decision making에서 두 가지 근본적인 문제
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="page-break-after: always;"></div>
+
 # Reference
 [1] [UCL Course on RL](http://www.cs.ucl.ac.uk/staff/D.Silver/web/Teaching.html)
+
 [2] [Reinforcement Learning: Tutorial(Seoul National University of Sceience and Technology)](https://www.evernote.com/shard/s675/nl/180905195/4db9d86b-791f-4b1b-ac81-e02fc0667025/)
+
 [3] [Reinforcement Learning : An Introduction, Sutton](https://www.evernote.com/shard/s675/nl/180905195/675ca894-3bb5-4e9f-975e-6e12c313e7d4/)
+
+[4] [jay.tech.blog](https://jay.tech.blog/2016/12/25/markov-decision-processes/)
+
+[5] [대손의 스마트 웹](http://daeson.tistory.com/312?category=710652)
