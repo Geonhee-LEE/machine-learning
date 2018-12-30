@@ -277,6 +277,7 @@ Sequential decision making에서 두 가지 근본적인 문제
 
 
 </br>
+</br>
 
 
 ----
@@ -287,39 +288,333 @@ Sequential decision making에서 두 가지 근본적인 문제
 
 > Definition
 > > state $S_t$는 _Markov_ if and only if
-> > $\mathbb{P} [S_{t+1} | S_t]$ = $\mathbb{P} [S_{t+1} | S_1,]$
+> >
+> > $\qquad$$\qquad$$\mathbb{P} [S_{t+1} | S_t]$ = $\mathbb{P} [S_{t+1} | S_1, ..., S_t]$
+
+-   State는 history로부터 모든 관련정보를 수집한다.
+-   State가 알려졌다면, history는 버릴 수 있다.
+    -   i.e. State는 미래의 sufficient statistic.   
+
+</br>
+</br>
+</br>
+
+
+----
+
+## State Transition Matrix
+
+Markov state $s$ 및 successor state $s'$에 대하여, __state transition probability__ 는 다음과 같이 정의된다.
+
+$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$    $P_{ss'} = \mathbb{P} [S_{t+1} = s' | S_t = s]$
+
+__State transition matrix__ $P$는 모든 state $s$에서 모든 successor $s'$로의 transition probabilities를 다음과 같이 정의한다.
+
+$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$  to
+$\qquad$$\qquad$$\quad$$P$ = from$
+\begin{bmatrix} 
+ P_{11}& ... & P_{1n}\\ 
+\vdots & \ddots & \vdots \\
+ P_{n1} & ... & P_{nn}
+\end{bmatrix}
+$
+
+여기서 각 행렬의 행의 합은 1이다.
+
+</br>
+</br>
+
+
+----
+
+## Markov Process
+
+__Markov process__ 는 memoryless random process, i.e. Markov property를 가진 random states $S_1 , S_2 , ...$ 의 sequence.
+
+<p align="center"> 
+    <img src="./img/Def_mp.png" width="340" height="100">
+</p>
+
+</br>
+
+## Markov Reward Process
+
+__Markov reward process__ 는 value를 가진 Markov chain(Markov Process)
+
+
+<p align="center"> 
+    <img src="./img/Def_mrp.png" width="340" height="140">
+</p>
+
+
+</br>
+</br>
+
+### Return
+
+
+<p align="center"> 
+    <img src="./img/Def_return.png" width="340" height="110">
+</p>
+
+-   Discount $\gamma \in [0, 1]$은 미래 보상들의 현재 값.
+-   k+1 time-step 이후에 받게되는 reward의 값은 $\gamma ^k R$.
+-   지연되는 reward는 즉각적인 reward를 중요시한다.
+    -   $\gamma$가 0에 가까우면, "myopic(근시안적)" 평가를 도출.
+    -   $\gamma$가 1에 가까우면, "far-sighted(미래를 내다보는)" 평가를 도출.
+
+</br>
+</br>
+
+### Discount
+
+대부분 __Markov reward__ 및 __decision process__ 는 discount된다. 왜?
+
+-   수학적으로 discount reward에 대해 편리하다.
+-   Cyclic Markov process에서 infinite return을 피한다.
+-   미래에 대한 uncertainty는 fully representation 하지 않아도 된다.
+-   동물/인간의 행동은 즉각적인 보상에 대해 선호하는 것을 볼 수 있다.
+
+</br>
+</br>
+
+### Value Function
+
+__Value function__ $v(s)$는 state $s$의 long-term 값을 제공한다.
+
+<p align="center"> 
+    <img src="./img/Value_func.png" width="340" height="100">
+</p>
+
+</br>
+</br>
+
+### Bellman Equation for MRPs
+
+Value function은 두 개의 part로 분리할 수 있다.
+-   즉각적인 reward $R_{t+1}$
+-   Successor state $\gamma v_{(S_{t+1})}$의 discounted value.
+
+
+<p align="center"> 
+    <img src="./img/Bellman_eqn.png" width="300" height="120">
+    <img src="./img/Bellman_eqn2.png" width="280" height="200">
+</p>
+
+
+</br>
+</br>
+
+### Solving the Bellman Equation
+
+-   Bellma Equation은 linear equation.
+-   이 식은 다음과 같이 직접 풀 수 있다:
+
+<p align="center"> 
+    <img src="./img/Solve_BM.png" width="180" height="90">
+</p>
+
+-    Computational complexity는 $n$ state에 대해 O($n^3$).
+-    __Small MRPs__ 에 대해서만 직접 풀 수 있다.
+-    __Large MRPs__ 에 대해 여러 iterative method가 있다.
+     -    Dynamic programming(DP)
+     -    Monte-Carlo evaluation(MC)
+     -    Temporal-Difference learning(TD)
+
+
+</br>
+</br>
+
+----
+
+## Markov Decision Process
+
+__Markov decision process(MDP)__ 는 __decision__ 을 가진 Markob reward process이다. 
+모든 state들이 Markov인 Environment이다.
+
+
+<p align="center"> 
+    <img src="./img/Def_mdp.png" width="340" height="160">
+</p>
+
+### Policies
+
+
+<p align="center"> 
+    <img src="./img/Def_policy.png" width="340" height="90">
+</p>
+
+-   Policy는 agent의 behavior를 완벽히 정의.
+-   MDP policy는 현재 state에 의존(not the history).
+-   i.e. Policy는 stationary(time-independent). $A_t \sim  \pi (\cdot | S_t), \forall t > 0$
+-   MDP $M = <S, A, P, R, \gamma>$ 및 policy $\pi$ 주어지고
+    -   State sequence ($S_1, S_2, ...$)는 Markov process $<S, P^{\pi}>$
+    -   State 및 reward sequence ($S_1, R_2, S_2, ...$)는 Markov reward process $<S, P^{\pi} R^{\pi}, \gamma>$
+    -   여기서, 
+
+
+$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$  $P_{s,s'} ^{\pi} = \sum_{a \in A} \pi (a|s) P ^a _{ss'}$
+
+
+$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$  $R_{s} ^{\pi} = \sum_{a \in A} \pi (a|s) R ^a _{s}$
+
+</br>
+</br>
+
+
+### Value Function
+
+
+<p align="center"> 
+    <img src="./img/VF.png" width="340" height="200">
+</p>
 
 
 
+### Bellman Expectation Equation
+
+**State-value($V$) function**은 즉각적인 reward와 successor state의 discounted value의 합으로 다시 분해할 수 있다.
 
 
+$\qquad$$\qquad$$\qquad$$\qquad$ $v_{\pi} (s) = \mathbb{E}_{\pi} [R_{t+1} + \gamma v_{\pi} (S_{t+1} )| S_t = s]$
+
+**Action-value($Q$) function** 은 유사하게 분해할 수 있다.
+
+$\qquad$$\qquad$$\qquad$ $q_{\pi} (s, a) = \mathbb{E}_{\pi} [R_{t+1} + \gamma q_{\pi} (S_{t+1} , A_{t+1} )| S_t = s, A_t = a]$
 
 
+</br>
+</br>
+
+#### Bellman Expectation Equation for $V ^{\pi}$
+
+<p align="center"> 
+    <img src="./img/BEEforV.png" width="200" height="180">  
+    <img src="./img/BEEforV2.png" width="260" height="200">
+</p>
 
 
+</br>
+</br>
 
+#### Bellman Expectation Equation for $Q ^{\pi}$
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<p align="center"> 
+    <img src="./img/BEEforQ.png" width="200" height="180">
+    <img src="./img/BEEforQ2.png" width="280" height="200">
+</p>
 
 <div style="page-break-after: always;"></div>
 
 
+#### Optimal Value Function
 
+
+<p align="center"> 
+    <img src="./img/Opt_VF.png" width="320" height="190">
+</p>
+
+-   Optimal value function은 MDP에서 best possible performance를 명시한다.
+-   MDP는 optimal value fucntion을 안다면 풀 수 있다.
+
+</br>
+</br>
+
+#### Optimal Policy
+
+Policy의 부분 순서를 정의
+
+$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$  $\pi \geq \pi '$ if $v_{\pi} (s) \geq v_{\pi '} (s), \forall s$
+
+
+<p align="center"> 
+    <img src="./img/Opt_policy.png" width="400" height="180">
+</p>
+
+
+#### Finding an Optimal policy
+
+Optimal policy는 $q_* (s, a)$를 최대화하여 찾을 수 있다.
+
+<p align="center"> 
+    <img src="./img/Find_opt_policy.png" width="240" height="60">
+</p>
+
+-   어떤 MDP에 대해서도 항상 deterministic optimal policy.
+-   만약 $q_* (s, a)$를 알고 있다면, 즉시 optimal policy를 가질 수 있다.
+
+
+
+### Bellman Optimality Equation
+
+#### Bellman Optimality Equation for $V ^*$
+
+Optimal value function은 재귀적으로 bellman optimality equation과 관련 있다.
+
+
+<p align="center"> 
+    <img src="./img/BOE_V.png" width="240" height="180">
+    <img src="./img/BOE_V2.png" width="260" height="200">
+</p>
+
+#### Bellman Optimality Equation for $Q ^*$
+
+<p align="center"> 
+    <img src="./img/BOE_Q.png" width="240" height="180">
+    <img src="./img/BOE_Q2.png" width="260" height="200">
+</p>
+
+#### Solving the Bellman Optimality Equation
+
+-    Bellman Optimality Equation은 non-linear.
+-    (일반적으로) closed form solution은 없다.
+-    많은 iterative solution 방법:
+     -    Value Iteration.
+     -    Policy Iteration.
+     -    Q-learning.
+     -    Sarse.
+
+
+
+</br>
+</br>
+
+-----
+
+### Extensions to MDPs
+
+-   Infinite and continous MSPs
+-   Parially observable MDPs
+-   Undiscounted, average reward MDPs
+
+#### Infinite MDPs
+
+다음 extension은 모두 이용가능하다:
+
+-   Countably infinite state and/or action spaces
+    -   Straightforward(명확, 간단한)
+-   Continuous state and/or action spaces
+    -   Closed form for linear quadratic model(LQR)
+-   Continous time
+    -   Requires partial differential equations
+    -   Hamilton-Jacobi-Bellman (HJB) equation
+    -   Limiting case of Bellman equation as time-step $\rightarrow$ 0
+
+### Partially Observable Markov Decision Process(POMDPs)
+
+POMDPs: Hidden state들을 가진 MDP.
+action을 가진 hidden Markov model.
+
+
+<p align="center"> 
+    <img src="./img/POMDP.png" width="320" height="200">
+</p>
+
+#### Belief States
+
+<p align="center"> 
+    <img src="./img/Belief_state.png" width="320" height="200">
+</p>
 
 -----
 
