@@ -612,6 +612,9 @@ action을 가진 hidden Markov model.
 
 #### Belief States
 
+-   History: action, observation, reward의 sequence.
+-   Belief state: 
+
 <p align="center"> 
     <img src="./img/Belief_state.png" width="320" height="200">
 </p>
