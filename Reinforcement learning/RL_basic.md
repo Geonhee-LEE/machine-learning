@@ -144,6 +144,7 @@ $\qquad$$\qquad$$\qquad$$\qquad$ $\qquad$ $\qquad$$\qquad$ $\qquad$     $O_t = S
     <img src="./img/maze_policy.png" width="320" height="240">
 </p>
 
+
 #### Value function
 
 -   **Value function**n: Future reward 예측 값.
@@ -377,6 +378,7 @@ __Markov reward process__ 는 value를 가진 Markov chain(Markov Process)
 
 </br>
 </br>
+</br>
 
 ### Value Function
 
@@ -476,11 +478,11 @@ $\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$  $R_{s} ^{\pi} = \sum_{a \in A}
 **State-value($V$) function**은 즉각적인 reward와 successor state의 discounted value의 합으로 다시 분해할 수 있다.
 
 
-$\qquad$$\qquad$$\qquad$$\qquad$ $v_{\pi} (s) = \mathbb{E}_{\pi} [R_{t+1} + \gamma v_{\pi} (S_{t+1} )| S_t = s]$
+$\qquad$$\qquad$$\qquad$$\qquad$ $v_{ \pi } (s) = \mathbb{E}_{ \pi } [R_{t+1} + \gamma v_{\pi} (S_{t+1} )| S_t = s]$
 
 **Action-value($Q$) function** 은 유사하게 분해할 수 있다.
 
-$\qquad$$\qquad$$\qquad$ $q_{\pi} (s, a) = \mathbb{E}_{\pi} [R_{t+1} + \gamma q_{\pi} (S_{t+1} , A_{t+1} )| S_t = s, A_t = a]$
+$\qquad$$\qquad$$\qquad$ $q_{ \pi } (s, a) = \mathbb{E}_{ \pi } [R_{t+1} + \gamma q_{ \pi } (S_{t+1} , A_{t+1} )| S_t = s, A_t = a]$
 
 
 </br>
@@ -531,6 +533,8 @@ $\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$  $\pi \geq \pi '$ if $v_{\pi} (
     <img src="./img/Opt_policy.png" width="400" height="180">
 </p>
 
+</br>
+</br>
 
 #### Finding an Optimal policy
 
@@ -544,6 +548,9 @@ Optimal policy는 $q_* (s, a)$를 최대화하여 찾을 수 있다.
 -   만약 $q_* (s, a)$를 알고 있다면, 즉시 optimal policy를 가질 수 있다.
 
 
+</br>
+</br>
+</br>
 
 ### Bellman Optimality Equation
 
@@ -578,6 +585,7 @@ Optimal value function은 재귀적으로 bellman optimality equation과 관련 
 
 </br>
 </br>
+</br>
 
 -----
 
@@ -602,8 +610,7 @@ Optimal value function은 재귀적으로 bellman optimality equation과 관련 
 
 ### Partially Observable Markov Decision Process(POMDPs)
 
-POMDPs: Hidden state들을 가진 MDP.
-action을 가진 hidden Markov model.
+POMDPs: Hidden state들을 가진 MDP. action을 가진 hidden Markov model.
 
 
 <p align="center"> 
@@ -613,11 +620,82 @@ action을 가진 hidden Markov model.
 #### Belief States
 
 -   History: action, observation, reward의 sequence.
--   Belief state: 
+-   Belief state: history 조건에서의 state의 확률 분포.
 
 <p align="center"> 
-    <img src="./img/Belief_state.png" width="320" height="200">
+    <img src="./img/Belief_state.png" width="320" height="180">
 </p>
+
+
+#### Reductions of POMDPs
+
+-   History $H_t$는 Markov property 만족.
+-   Belief state $b ( H_t )$는 Markov property 만족.
+
+
+<p align="center"> 
+    <img src="./img/red_pomdp.png" width="450" height="200">
+</p>
+
+
+-   POMDP는 (infinite) history tree로 축소될 수 있음.
+-   POMDP는 (infinite) belief state로 축소될 수 있음.
+
+</br>
+</br>
+</br>
+
+-----
+
+###  Ergodic Markov Process
+
+-   Ergodic Markov process는
+    -   Recurrent: 각 state는 무한히 방문됨
+    -   Aperiodic: 각 state는 systematic 주기없이 방문됨.
+
+-   Ergodic Markov process는 제한된 고정 분포 $d^{\pi} (s)$를 가짐.
+-   정의:
+    -   어떠한 policy에 의해 유도된 Markov chain이 ergodic이라면 MDP는 ergodic.
+-   어떠한 policy $\pi$ 에 대해서, ergodic MDP는 start state의 독립적인 time-step ${\rho} ^{\pi}$ 분의(per) average reward를 가짐. 
+
+
+<p align="center"> 
+    <img src="./img/ergodic_mp.png" width="320" height="120">
+    </br>
+    <img src="./img/def_ergodic.png" width="320" height="60">
+    </br>
+    </br>
+    </br>
+    <img src="./img/def_ergodic2.png" width="420" height="110">
+</p>
+
+</br>
+</br>
+</br>
+
+----
+
+###  Average Reward Value Function
+
+-   Undiscounted의 value function, ergodic MDP는 average reward의 관점으로 표현될 수 있다.
+-   $\tilde{v} _{\pi} (s)$는 state $s$ 에서 시작하기 때문에 extra reward.
+
+
+<p align="center"> 
+    <img src="./img/ARVF.png" width="250" height="70">
+</p>
+
+이것은 average reward Bellman equation과 상응한다.
+
+
+<p align="center"> 
+    <img src="./img/ARVF2.png" width="350" height="90">
+</p>
+
+</br>
+</br>
+</br>
+
 
 -----
 
