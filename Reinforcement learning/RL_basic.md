@@ -446,9 +446,9 @@ __Markov decision process(MDP)__ 는 __decision__ 을 가진 Markob reward proce
     <img src="./img/Def_policy.png" width="340" height="90">
 </p>
 
--   Policy는 agent의 behavior를 완벽히 정의.
--   MDP policy는 현재 state에 의존(not the history).
--   i.e. Policy는 stationary(time-independent). $A_t \sim  \pi (\cdot | S_t), \forall t > 0$
+-   **Policy** 는 agent의 behavior를 완벽히 정의.
+-   MDP policy는 현재 state에만 의존(not the history).
+    -   i.e. Policy는 stationary(time-independent). $A_t \sim  \pi (\cdot | S_t), \forall t > 0$
 -   MDP $M = <S, A, P, R, \gamma>$ 및 policy $\pi$ 주어지고
     -   State sequence ($S_1, S_2, ...$)는 Markov process $<S, P^{\pi}>$
     -   State 및 reward sequence ($S_1, R_2, S_2, ...$)는 Markov reward process $<S, P^{\pi} R^{\pi}, \gamma>$
@@ -478,11 +478,11 @@ $\qquad$$\qquad$$\qquad$$\qquad$$\qquad$$\qquad$  $R_{s} ^{\pi} = \sum_{a \in A}
 **State-value($V$) function**은 즉각적인 reward와 successor state의 discounted value의 합으로 다시 분해할 수 있다.
 
 
-$\qquad$$\qquad$$\qquad$$\qquad$ $v_{ \pi } (s) = \mathbb{E}_{ \pi } [R_{t+1} + \gamma v_{\pi} (S_{t+1} )| S_t = s]$
+$\qquad$$\qquad$$\qquad$$\qquad$ $v _{\pi} (s) = \mathbb{E} _{\pi} [R _{t+1} + \gamma v _{\pi} (S _{t+1} )| S _t = s]$
 
 **Action-value($Q$) function** 은 유사하게 분해할 수 있다.
 
-$\qquad$$\qquad$$\qquad$ $q_{ \pi } (s, a) = \mathbb{E}_{ \pi } [R_{t+1} + \gamma q_{ \pi } (S_{t+1} , A_{t+1} )| S_t = s, A_t = a]$
+$\qquad$$\qquad$$\qquad$ $q _{\pi} (s, a) = \mathbb{E} _{\pi} [R _{t+1} + \gamma q _{\pi} (S _{t+1} , A _{t+1} )| S _t = s, A _t = a]$
 
 
 </br>
@@ -696,17 +696,448 @@ POMDPs: Hidden state들을 가진 MDP. action을 가진 hidden Markov model.
 </br>
 </br>
 
+<div style="page-break-after: always;"></div>
+
 
 -----
 
 
-# Dynamic Programming(DP)
+# Planning by Dynamic Programming(DP)
+
+1.  Introduction
+2.  Policy Evaluation
+3.  Policy Iteration
+4.  Value Iteration
+5.  Extensions to Dynamic Programming 
+6.  Contraction Mapping
 
 
 
 
+<div style="page-break-after: always;"></div>
+
+## Introduction
+
+### What is Dynamic Programming
+
+*Dynamic* : 문제에 대한 sequential 또는 temporal component,
+
+*Programming* : "Program"을 최적화하는 것, i.e., policy
+-   c.f.(참조) linear programming
 
 
+__Dynamic programming__ :
+-   복잡한 문제들을 푸는 방법.
+-   문제들은 subproblem으로 분해하고,
+    -   subproblem을 풀고,
+    -   subproblem의 해를 결합.
+
+</br>
+</br>
+</br>
+
+----
+
+### Requirements for Dynamic Programming
+
+DP는 두 가지 특성을 가지는 문제들에 대한 가장 일반적인 솔루션.
+
+1.  Optimal substructure
+    -   Optimality 원리를 적용함.
+    -   Optimal solution은 subproblem으로 분해될 수 있음.
+2.  Overlapping subproblems
+    -   Subproblem들은 여러번 반복됨.
+    -   Solution은 저장 및 재사용 될 수 있음.
+-   Markov decision process(MDP)는 두 가지 특성을 모두 만족:
+    -   Bellman equation은 recursive decomposition을 제공.
+    -   Value function은 solution을 저장 및 재사용.
+
+### Planning by Dynamic Programming
+
+-   Dynamic Programming은 MDP의 **full knowledge** 를 가정.
+-   MDP에서 _planning_ 을 위해 사용 됨.
+    -   For *prediction*:
+        -   **Input**: 
+            -   MDP $<S, A, P, R, \gamma >$ 및 Policy $\pi$
+            -   or: $<S, P ^{\pi} , R ^{\pi} , \gamma >$
+        -   **Output**: 
+            -   value function $v _{\pi}$.
+    -   Or for *control*:
+        -   **Input**: 
+            -   MDP $<S, A, P, R, \gamma >$.
+        -   **Output**: 
+            -   Optimal value function $v _{\pi}$  및 optimal policy $\pi _*$.
+
+### Other Applications of Dynamic Programming
+
+Dynamic Programming은 많은 다른 문제들로 풀기위해 사용되어 진다, 예:
+-   Scheduling algorithms
+-   String algorithms (e.g. sequence alignment)
+-   Graph algorithms (e.g. shortest path algorithms)
+-   Graphical models (e.g. Viterbi algorithm) 
+-   Bioinformatics (e.g. lattice models)
+
+
+<div style="page-break-after: always;"></div>
+
+-----
+
+## Policy Evaluation
+
+### Iterative Policy Evaluation
+
+-   Problem: 주어진 policy $\pi$ 를 evaluation
+-   Solution: iterative application of Bellman expectation backup
+    -   $v_1 \rightarrow v_2 \rightarrow ... \rightarrow v _{\pi}$
+    -   *synchronous* backup을 사용
+        -   At each iteration k + 1,
+        -   For all states s $\in S$ ,
+        -   $v _k (s')$ 으로부터 $v _{k+1} (s)$ update.
+            -   여기서 $s'$ 는 $s$ 의 successor state.
+
+-   나중에는 *asynchronous* backup을 사용할 것.
+-   $v _{\pi}$ 로의 수렴은 현재 part 마지막에서 증명할 것.
+
+
+
+<p align="center"> 
+    <img src="./img/IterPE.png" width="350" height="240">
+</p>
+
+### Example: Small Grid world
+
+#### Evaluating a Random Policy in the Small Gridworld
+
+<p align="center"> 
+    <img src="./img/EvalPolicy.png" width="240" height="90">
+</p>
+
+-   Undiscounted episodic MDP ( $\gamma$  = 1).
+-   Terminal state(gray)로 도달할 때까지 reward는 -1.
+-   Agent는 uniform random policy를 따른다.
+    -   $\pi (n | \cdot )$ = $\pi (e | \cdot )$ = $\pi (s | \cdot )$ = $\pi (w | \cdot )$ = 0.25 (= 동서남북 방향으로 동일한 확률로 이동).
+
+<p align="center"> 
+    <img src="./img/IterPEEx.png" width="360" height="360">
+    <img src="./img/IterPEEx2.png" width="360" height="360">
+</p>
+
+
+-----
+
+## Policy Iteration
+
+### How to Improve a Policy
+
+
+-   Policy $\pi$가 주어지면,
+    -   **Evaluate** the policy $\pi$
+        -   $v _{\pi} (s)$ = $\mathbb{E} [R _{t+1} + \gamma R _{t+2} + ... | S _t = s]$
+    -   $v _ \pi$ 에 대하여 탐욕적(greedily)으로 행동하여 policy를 **Improve**  
+        -   $\pi '$ = greedy ( $v _{\pi}$ )
+
+-   Small Gridworld에서 **improved policy**는 optimal, $\pi ' = \pi ^*$.
+-   일반적으로, 더 많은 improvement / evaluation의 interation들이 필요.
+-   But, **policy iteration** 의 process는 항상 $\pi ^*$ 로 수렴.
+
+
+<p align="center"> 
+    <img src="./img/PE.png" width="360" height="240">
+</p>
+
+
+
+### Policy Improvement
+
+-   Deterministic policy a = $\pi (s)$를 고려하자.
+-   탐욕적(greddily)으로 행동하여 policy를 *improve* 할 수 있다
+    -   $\pi ' (s)$ = argmax $_{a \in A} q _{\pi} (s, a)$
+-   One step에 걸쳐 state 어떠한 $s$ 로부터 value를 improve,
+    -   $q _{\pi} (s, \pi ' (s))$ = max $_{a \in A} q _{\pi} (s, a) \geq q _{\pi} (s, \pi (s)) = v _{\pi} (s)$
+-   위의 과정으로 value function을 improvement,
+    -   $v _{\pi} (s) \leq q _{\pi} (s, \pi ' (s)) = \mathbb{E} _{\pi '} [R _{t+1} + \gamma v _{\pi} (S _{t+1}) | S _t = s]$
+    -   $\qquad$  $\leq \mathbb{E} _{\pi '} [R _{t+1} + \gamma q _{\pi} (S _{t+1} , \pi ' (S _{t+1})) | S _t = s]$
+    -   $\qquad$  $\leq \mathbb{E} _{\pi '} [R _{t+1} + \gamma R _{t+2}  + \gamma ^{2} q _{\pi} (S _{t+2} , \pi ' (S _{t+2})) | S _t = s]$
+    -   $\qquad$  $\leq \mathbb{E} _{\pi '} [R _{t+1} + ... | S _t = s]$ = $v _{\pi '} (s)$
+
+-    만약 improvement가 중단되면,
+     -    $q _{\pi} (s, \pi ' (s)) = max _{a \in A} q _{\pi} (s, a) = q _{\pi} (s, \pi (s)) = v _{\pi} (s)$
+-   그다음 Bellman optimality equation은 다음을 만족한다:
+    -   $v _{\pi} (s) = max _{a \in A} q _{\pi} (s, a)$
+-   그러므로 $v _{\pi} (s) = v _* (s)$ for all $s \in S$
+-   그래서 $\pi$ 는 **optimal policy**.
+
+
+</br>
+</br>
+</br>
+
+-----
+
+## Value Iteration
+
+### Value Iteration in MDPs
+
+
+#### Principle of Optimality
+
+모든 optimal policy는 두 개의 성분으로 분할:
+-   Optimal first action $A _*$
+-   Followed by an optimal policy from successor state $S'$
+
+<p align="center"> 
+    <img src="./img/Th_ProfOpt.png" width="360" height="120">
+</p>
+
+</br>
+</br>
+</br>
+
+#### Deterministic Value Iteration
+
+-   만약 subproblem $v _* (s')$ 에대한 solution을 안다면,
+    -   solution $v _* (s)$ 는 one-step lookahead에의해 찾을 수 있다
+        -   $v _* (s) \leftarrow max _{a \in A} R ^a _s + \gamma \sum_{s' \in S} P ^a _{ss'} v _* (s')$
+    -   Value iteration의 idea는 반복적으로 갱신하는 것을 적용.
+    -   Intuition: 마지막 reward를 가지고 시작하여 backward 방향으로 진행
+
+<p align="center"> 
+    <img src="./img/Ex_shortPath.png" width="360" height="240">
+</p>
+
+#### Value Iteration
+
+-   Problem: optimal policy $\pi$ 를 찾는 것.
+-   Solution: iterative application of Bellman optimality backup.
+    -   $v_1 \rightarrow v_2 \rightarrow ... v_*$
+    -   Syncgronous backup 사용
+        -   At each iteration k+1
+        -   For all state $s \in S$
+        -   $v _k (s')$ 으로부터 $v _{k+1} (s) 갱신$
+    -   $v _*$ 으로 수렴하는 것은 이후에 증명.
+    -   Policy iteration과 달리, explicit policy가 없음(최대값 찾는 정책).
+    -   Intermediate value function은 어떤 policy과도 일치하지 않을 수 있음.
+
+
+<p align="center"> 
+    <img src="./img/Value_Iter.png" width="300" height="240">
+</p>
+
+</br>
+</br>
+
+### Summarry of DP Algorithms
+
+#### Synchronous Dynamic Programming Algorithms
+
+
+<p align="center"> 
+    <img src="./img/Summ_DP.png" width="380" height="240">
+</p>
+
+</br>
+</br>
+</br>
+
+### Extensions to Dynamic Programming
+
+#### Asynchronous Dynamic Programming 
+
+-   DP 방법은 지금까지 *synchronous backup* 을 사용하여 기술.
+    -   i.e. 모든 state들은 parallel(병렬적)하게 back up되었다.
+
+-   *Asynchronous DP* 는 각각 순서상관없이 state들을 back up
+    -   각각 선택된 state에 대해서, 적절한 back up을 적용하고,
+    -   Computation을 상당히 줄일 수 있고,
+    -   모든 state가 계속 선택되면, 수렴성을 보장.
+
+-   Asynchronous dynamic programming에 대한 세 가지 간단한 ideas:
+    -   _In-place dynamic programming_
+    -   _Prioritised sweeping_
+    -   _Real-time dynamic programming_
+
+</br>
+
+
+#### In-place Dynamic Programming 
+
+-   Synchronous value iteration은 모든 $s \in S$에 대해서 value function의 두 개의 복사본들을 저장.
+
+<p align="center"> 
+    <img src="./img/In-p_DP.png" width="260" height="80">
+</p>
+
+-   In-place value iteration은 모든 $s \in S$에 대해서 **오직 하나의 복사본**을 저장.
+
+<p align="center">
+    <img src="./img/In-p_DP2.png" width="240" height="60">
+</p>
+
+</br>
+
+#### Prioritised sweeping
+
+-   State 선택하기 위해서 Bellman error의 크기를 사용, e.g.
+
+<p align="center">
+    <img src="./img/Prior_error.png" width="240" height="60">
+</p>
+
+-   가장 큰  Bellman error가 있는 state를 back-up,
+-   각 back-up 후에 영향을 받는 Bellman error 업데이트.
+-   Reverse dynamic (predecessor state)의 지식을 요구한다.
+-   Priority queue를 유지하여 효율적으로 구현될 수 있다.
+
+</br>
+
+#### Real-time dynamic programming
+
+-   Idea: 오직 agent와 관련있는 state
+-   State의 선택하기 위해 agent의 경험을 사용.
+-   각 time-step $S _t , A _t , R _{t+1}$ 이후에,
+-   State $S _t$ 를 back-up.
+
+<p align="center">
+    <img src="./img/RTDP.png" width="240" height="60">
+</p>
+
+</br>
+
+### Full-Width Backups
+
+-   DP는 _full-width_ backup을 사용.
+-   각 backup(sync or async)에 대하여,
+    -   모든 successor state 및 action아 고려.
+    -   MDP transition 및 reward function의 knowledge 사용.
+
+-   DP는 medium-sized 문제에 대해 효율적(100만 state)
+-   큰 문제에 대해서, DP는 Bellman은 차원의 저주( _curse of dimensionality_ )
+    -   state의 수 ( $n = |S|$ )는 state 변수의 수의 기하급수적으로 증가.
+-   심지어 하나의 backup도 매우 expensive될 수 있음.
+
+<p align="center">
+    <img src="./img/Full-width_backup.png" width="220" height="160">
+</p>
+
+</br>
+
+### Sample Backups
+
+-   다음 강의는 _sample backup_ 들에 대해 고려할 것.
+    -   Reward function( $R$ )  및 transition dynamics( $P$ ) 대신에,
+    -   Sample reward 및 sample trainsition $<S, A, R, S'>$ 사용
+
+-   장점:
+    -   Model-free: MDP의 사전 지식을 요구하지 않음.
+    -   __Sampling__ 을 통해 차원의 저주를 타개.
+        -   Backup 비용은 상수이고, $n = |S|$ 에 독립적.
+
+
+<p align="center">
+    <img src="./img/Sample_Backup.png" width="60" height="120">
+</p>
+
+
+</br>
+
+### Approximate Dynamic Programming
+
+-    Value function을 근사화
+     -    _function approximator ( $\hat{v} (s, w)$ )_ 을 사용.
+     -    DP를 $\hat{v} (s, w)$ 에 적용.
+
+
+-   e.g. 각 iteration $k$ 에 맞는 value Iteration을 반복,
+    -   Sample states $\tilde{S} \subseteq S$
+    -   각 state $s \in \tilde{S}$ 에 대해서, Bellman optimality equation을 사용하여 target value를 추정, 
+    -   Target { < $s, \tilde{v} _k (s)$ > } 을 사용하여, next value function $\hat{v} ( \cdot , w _{k+1} )$ 을 학습.
+
+
+
+<p align="center">
+    <img src="./img/App_Dp.png" width="240" height="60">
+</p>
+
+
+</br>
+
+> 아래는 수렴성 증명 내용.
+
+### Contraction Mapping
+
+#### Some Technical Questions
+
+-   Value iteration이 $v _*$에 수렴하는 것을 어떻게 알 수 있을까?
+-   Or iterative policy evaluation이 $v _{\pi}$ 에 수렴하는가?
+-   And therefore policy iteration이 $v _*$ 에 수렴하는가?
+-   Solution이 유일(unique)한가?
+-   얼마나 이러한 알고리즘들이 빠르게 수렴하는가?
+-   이러한 질문들은 **contraction mapping theorem** 에 의해 해결됨.
+
+#### Value Function Space
+
+-   Value function들에 걸쳐 vector space $V$ 를 고려해보자
+    -   $|S|$ 차원
+    -   이러한 공간에서 각 지점은 value function $v(s)$ 를 명시.
+    -   이러한 공간에서 Bellman backup은 어떤 지점에 대해서 수행되는가?
+    -   Value function을 *closer* 로 가져다주는 것을 보여줄 것.
+    -   따라서 backup은 unique solution에 수렴해야만 한다.
+
+#### Value Function $\infty$ - Norm
+
+-   $\infty$ - norm에 의한 State-value fucntion(u, v) 간의 거리를 측정할 것.
+-   i.e. state value간의 가장 큰 차이
+
+   
+<p align="center">
+    <img src="./img/VF_Dist.png" width="180" height="45">
+</p>
+
+
+#### Bellman Expectation Backup is a Contraction
+
+-   _Bellman expectation backup operator_ ($T ^{\pi}$) 정의.
+  
+<p align="center">
+    <img src="./img/BellExBack.png" width="150" height="35">
+</p>
+
+-   이 operator는 $\gamma$ - contraction, i.e. 이것은 value function을 적어도 $\gamma$ 만큼 가까워지도록 만든다.
+
+<p align="center">
+    <img src="./img/BellExBack2.png" width="340" height="105">
+</p>
+
+#### Contraction Mapping Theorem
+
+-   Theorem(Contracting Mapping Theorem)
+    -   어떤 metric space $V$ 에 대해서 operator $T(v)$하에서 complete (i.e. closed) 이라면,
+    -   여기서 $T$ 가  $\gamma$ -contraction
+        -   $T$ 는 unique fixed point에 수렴.
+        -   $\gamma$ 의 비율로 선형적으로 수렴.
+
+<p align="center">
+    <img src="./img/ContrMapping.png" width="340" height="105">
+</p>
+
+#### Convergence of Iter. Policy Evaluation and Policy Iteration
+
+<p align="center">
+    <img src="./img/Conv_PolE_Iter.png" width="400" height="150">
+</p>
+
+
+#### Bellman Optimality Backup is a Contraction
+
+<p align="center">
+    <img src="./img/BOB_Cont.png" width="400" height="220">
+</p>
+
+####  Convergence of Value Iteration
+
+<p align="center">
+    <img src="./img/Conv_ValIter.png" width="400" height="180">
+</p>
 
 
 
@@ -718,6 +1149,7 @@ POMDPs: Hidden state들을 가진 MDP. action을 가진 hidden Markov model.
 
 
 <div style="page-break-after: always;"></div>
+
 
 -----
 
